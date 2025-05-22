@@ -64,7 +64,7 @@ Se quiser trocar ideia, sugerir algo ou reportar bugs, me chama:
 
 ## 📜 Licença
 
-Este projeto está licenciado sob a [Apache License 2.0](./LICENSE).
+Este projeto está licenciado sob a [Apache License 2.0](./LICENSE.txt).
 
 ---
 
