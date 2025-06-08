@@ -23,28 +23,43 @@ public class VendedorService {
 	
 	@Transactional
 	public Vendedor cadastrar(Vendedor vendedor) {
-		Vendedor existe = vendedorRepository.findByEmail(vendedor.getEmail());
-		if(existe != null) {
-			throw new RuntimeException("Já existe um vendedor com ess e-mail");		
-		}
+		   vendedorRepository.findByEmail(vendedor.getEmail())
+				  .ifPresent(v -> {
+				   throw new RuntimeException ("Email já está cadastrado, tente outro email");
+				   });
+		     
 		return vendedorRepository.save(vendedor);
 	}
 	
+	
 	public List<Vendedor> listarTodos(){
-		
 		return vendedorRepository.findAll();
 	}
+	
 	
 	public Optional<Vendedor> buscaPorId(Long id){
 		return vendedorRepository.findById(id);
 		
 	}
+	
+	
+	@Transactional
+	public Vendedor atualizar(Long id,Vendedor atualiza) {
+		Vendedor vendedor = vendedorRepository.findById(id)
+				       .orElseThrow(()
+				       -> new RuntimeException("Id não encontrado: " + id));
+		vendedor.setNome(atualiza.getNome());
+		vendedor.setEmail(atualiza.getEmail());
+			
+		return vendedorRepository.save(vendedor);
+	}
+	
+	
 	@Transactional
 	public void deletarPorId(Long id) {
 		vendedorRepository.deleteById(id);
 	}
-	
-	
+		
 	
 	
 }
