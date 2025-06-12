@@ -59,7 +59,7 @@ public class GerenteService {
 		}
 		
 		gerenteRepository.deleteById(id);
-		return "Gerente deletetado pelo ID:" + id;
+		return "Gerente deletado pelo ID:" + id;
 		
 	}
 	
