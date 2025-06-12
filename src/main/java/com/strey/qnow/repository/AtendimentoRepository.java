@@ -16,5 +16,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>{
 	List<Atendimento> findByVendedor(Vendedor vendedor);
 	
 	
+	
+	
 
 }
