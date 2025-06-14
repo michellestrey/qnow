@@ -1,4 +1,4 @@
-package com.strey.qnow.dto.gerentdto;
+package com.strey.qnow.dto.gerentedto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
