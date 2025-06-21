@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,15 +26,20 @@ public class Loja {
 	@Column(nullable = false, length =100)
 	private String nome;
 	
-	@Column(length = 200)
+	@Column(length = 200, nullable = false, unique = true)
 	private String endereco;
 	
-	@Column(unique = true, length = 18)//tamanho máximo de 18 incluindo caracteres (00.000.000/0000-00)
+	@Column(unique = true, length = 18, nullable = false)//tamanho máximo de 18 incluindo caracteres (00.000.000/0000-00)
     private String cnpj;
 	
-	@OneToOne
-	@JoinColumn(name = "gerente_id", nullable = false)
-	private Gerente gerente;
+	@Column(length= 200, unique = true, nullable = false)
+	private String email;
+	
+	@Column(nullable = false, length = 200)
+	private String senha;
+	
+	@OneToMany(mappedBy = "loja")
+	private List<Gerente> gerentes;
 	
 	@OneToMany(mappedBy = "loja")
 	private List<Vendedor> vendedores;

@@ -45,7 +45,7 @@ public class GerenteController {
 	}
 
 
-	@GetMapping("/busca-id")
+	@GetMapping("/busca-id/{id}")
 	public ResponseEntity<ResponseGerenteDTO> buscaId(@PathVariable Long id){
 		ResponseGerenteDTO dto = gerenteService.buscaId(id);
 		if(dto != null) {
@@ -55,14 +55,14 @@ public class GerenteController {
 		}
 	}
 
-      @DeleteMapping("/delete-id")
+      @DeleteMapping("/delete-id/{id}")
       public ResponseEntity<Void> delete(@PathVariable Long id){
     	  gerenteService.deletarPorId(id);
     	  return ResponseEntity.noContent().build();
       }
 
 
-   @PutMapping("/atualiza-id")
+   @PutMapping("/atualiza-id/{id}")
    public ResponseEntity<ResponseGerenteDTO> atualiza(@PathVariable Long id, @RequestBody UpdateGerenteDTO upDTO){
 	   ResponseGerenteDTO atualizado = gerenteService.atualizarGerente(id, upDTO);
 	   return ResponseEntity.ok(atualizado);
