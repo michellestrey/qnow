@@ -26,9 +26,11 @@ public class LojaService {
 
 	@Transactional
 	public ResponseLojaDTO cadastrarLoja(CreateLojaDTO dto){
-		boolean existe = getLojaRepository().findByEmail(dto.email()).isPresent();
+		
+	
+	    boolean existe = lojaRepository.existsByEmail(dto.email());
 		if(existe) {
-			throw new RuntimeException("Email já cadastrado \n Tente outro email");
+			throw new RuntimeException("Email já cadastrado. \n Tente outro email!");
 		}
 		Loja loja = new Loja();
 		loja.setNome(dto.nome());
@@ -54,18 +56,21 @@ public class LojaService {
 
 	public ResponseLojaDTO buscarId(Long id){
 		return lojaRepository.findById(id)
-				      .map(l -> new ResponseLojaDTO(l.getId(), l.getNome(), l.getCnpj(), l.getEmail()))
+				      .map(l -> new ResponseLojaDTO(l.getId(), l.getNome(), l.getEmail(), l.getCnpj()))
 				      .orElseThrow(() -> new RuntimeException("Id " + id+ " não encontrado") );
 
 	}
 
 	@Transactional
 	public ResponseLojaDTO atualizarLoja(Long id, UpdateLojaDTO dto) {
-		Loja loja = getLojaRepository().findById(id)
-				.orElseThrow(()
-						-> new RuntimeException("Id não encontrado: " + id));
+			Loja loja = lojaRepository.findById(id)
+			.orElseThrow(()
+					-> new RuntimeException("Id não encontrado: " + id));
+		
+		
 		Optional.ofNullable(dto.getNome()).ifPresent(loja::setNome);
 		Optional.ofNullable(dto.getEndereco()).ifPresent(loja::setEndereco);
+		Optional.ofNullable(dto.getCnpj()).ifPresent(loja::setCnpj);
 		Optional.ofNullable(dto.getEmail()).ifPresent(loja::setEmail);
 		Optional.ofNullable(dto.getSenha()).ifPresent(loja::setSenha);
 		
@@ -74,8 +79,8 @@ public class LojaService {
 		return new ResponseLojaDTO(
 				lojaAtualizada.getId(),
 				lojaAtualizada.getNome(),
-				lojaAtualizada.getCnpj(),
-     			lojaAtualizada.getEmail());
+				lojaAtualizada.getEmail(),
+     			lojaAtualizada.getCnpj());
 		}
 
 	@Transactional
