@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -36,7 +35,7 @@ public class Loja {
 	private String email;
 	
 	@Column(nullable = false, length = 200)
-	private String senha;
+	private String senha; 
 	
 	@OneToMany(mappedBy = "loja")
 	private List<Gerente> gerentes;
