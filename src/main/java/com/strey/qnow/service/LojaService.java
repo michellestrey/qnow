@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.strey.qnow.dto.lojadto.CreateLojaDTO;
+import com.strey.qnow.dto.lojadto.MensagemLojaDTO;
+import com.strey.qnow.dto.lojadto.ResponseLojaDTO;
+import com.strey.qnow.dto.lojadto.UpdateLojaDTO;
 import com.strey.qnow.model.Loja;
 import com.strey.qnow.repository.LojaRepository;
 
@@ -21,43 +25,71 @@ public class LojaService {
 
 
 	@Transactional
-	public Loja cadastrarLoja(Loja loja){
-		getLojaRepository().findById(loja.getId())
-		.ifPresent(l ->{
-			throw new RuntimeException("Loja já cadastrada!");
-		});
-		return getLojaRepository().save(loja);
-
+	public ResponseLojaDTO cadastrarLoja(CreateLojaDTO dto){
+		boolean existe = getLojaRepository().findByEmail(dto.email()).isPresent();
+		if(existe) {
+			throw new RuntimeException("Email já cadastrado \n Tente outro email");
+		}
+		Loja loja = new Loja();
+		loja.setNome(dto.nome());
+		loja.setEndereco(dto.endereco());
+		loja.setCnpj(dto.cnpj());
+		loja.setEmail(dto.email());
+		loja.setSenha(dto.senha());
+		
+		Loja salva = lojaRepository.save(loja);
+		return new ResponseLojaDTO(salva.getId(), salva.getNome(),salva.getEmail(),
+								   salva.getCnpj());
 	}
 
-	public List<Loja>listarLojas() {
-		return getLojaRepository().findAll();
-	}
+	public List<ResponseLojaDTO>listarLojas() {
+		return lojaRepository.findAll()
+			.stream()
+			.map(l -> new ResponseLojaDTO(l.getId(), l.getNome(), l.getEmail(), l.getCnpj()))
+			.toList();
+					
+					
+					
+	}  
 
-	public Optional<Loja> buscarId(Long id){
-		return getLojaRepository().findById(id);
+	public ResponseLojaDTO buscarId(Long id){
+		return lojaRepository.findById(id)
+				      .map(l -> new ResponseLojaDTO(l.getId(), l.getNome(), l.getCnpj(), l.getEmail()))
+				      .orElseThrow(() -> new RuntimeException("Id " + id+ " não encontrado") );
 
 	}
 
 	@Transactional
-	public Loja atualizarLoja(Long id, Loja atualiza) {
+	public ResponseLojaDTO atualizarLoja(Long id, UpdateLojaDTO dto) {
 		Loja loja = getLojaRepository().findById(id)
 				.orElseThrow(()
 						-> new RuntimeException("Id não encontrado: " + id));
-		loja.setNome(atualiza.getNome());	
-		return getLojaRepository().save(loja); 
-	}
+		Optional.ofNullable(dto.getNome()).ifPresent(loja::setNome);
+		Optional.ofNullable(dto.getEndereco()).ifPresent(loja::setEndereco);
+		Optional.ofNullable(dto.getEmail()).ifPresent(loja::setEmail);
+		Optional.ofNullable(dto.getSenha()).ifPresent(loja::setSenha);
+		
+		Loja lojaAtualizada = lojaRepository.save(loja);
+		
+		return new ResponseLojaDTO(
+				lojaAtualizada.getId(),
+				lojaAtualizada.getNome(),
+				lojaAtualizada.getCnpj(),
+     			lojaAtualizada.getEmail());
+		}
 
 	@Transactional
-	public String deletarLojaPorId(Long id) {
-		getLojaRepository().deleteById(id);
-		return "Loja com o ID " + id + " deletada!";
+	public MensagemLojaDTO deletarLojaPorId(Long id) {
+		if(!lojaRepository.existsById(id)) {
+			return new MensagemLojaDTO("Loja com o ID " + id + " não encontrada");
+		}
+		lojaRepository.deleteById(id);
+		return new MensagemLojaDTO("Loja com o ID " + id + " deletada");
+		
+		
 	}
 
-	public LojaRepository getLojaRepository() {
-		return lojaRepository;
-	}
-
+	
 
 
 }

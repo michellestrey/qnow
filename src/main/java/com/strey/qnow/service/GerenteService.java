@@ -48,7 +48,7 @@ public class GerenteService {
 				.stream()
 				.map(g -> new ResponseGerenteDTO(g.getId(), g.getNome(), g.getEmail()))
 				.toList();
-
+ 
 
 	}
 

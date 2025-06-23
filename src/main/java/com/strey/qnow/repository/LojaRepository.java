@@ -9,5 +9,6 @@ import com.strey.qnow.model.Loja;
 public interface LojaRepository extends JpaRepository <Loja, Long> {
 	
 	Optional<Loja> findByCnpj(String cnpj);
+	Optional<Loja> findByEmail(String email);
 
 }

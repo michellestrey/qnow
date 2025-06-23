@@ -9,6 +9,7 @@ public class UpdateGerenteDTO {
 	
 	
 	@NotBlank
+	@Size(min=3)
 	private String nome;
 	@NotBlank
 	@Size(max=100)
