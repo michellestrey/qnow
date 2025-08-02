@@ -27,6 +27,7 @@ public class Gerente {
 	private String email;
 	@Column(nullable = false)
 	private String senha;
+	
 	@ManyToOne
 	@JoinColumn(name = "loja_id", nullable = true)
 	private Loja loja;
